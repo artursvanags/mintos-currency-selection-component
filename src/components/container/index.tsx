@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { CurrencyDescription } from '@/lib/currencies';
+import { cn } from '@/lib/utils';
 
 import { Icons } from '@/config/icons';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
-import { cn } from '@/lib/utils';
-import ActionBar from './components/action-bar';
-import { Input } from '../ui/input';
+import ToolBar from './components/tool-bar';
 
 interface SelectionContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   data: CurrencyDescription[];
@@ -46,55 +46,67 @@ const SelectionContainer: React.FC<SelectionContainerProps> = ({
 
   return (
     <div
-      className={cn(
-        props.className,
-        'flex flex-col space-y-2 p-4 w-full lg:w-[680px]',
-      )}
+      className={cn(props.className, 'flex w-full max-w-[680px] flex-col p-4')}
       {...props}
     >
-      <ActionBar
-        items={selectedItem}
-        onClear={clearSelection}
-        onSelectAll={selectAll}
-      />
-      <div>
+      <div className="space-y-2">
+        <ToolBar
+          items={items.map((item) => item.code)}
+          selectedItems={selectedItem}
+          onClear={clearSelection}
+          onSelectAll={selectAll}
+        />
+
         <Input
+          aria-label="search-input"
           type="text"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search by currency code"
         />
-      </div>
-      {selectedItem.length > 0 && (
-        <div className=" flex max-h-64 flex-col overflow-y-auto rounded border bg-primary-foreground p-4">
-          <span className="pb-4 text-sm font-semibold text-muted-foreground">
-            Selected item/-s
-          </span>
-          <div className="grid sm:grid-cols-4 md:grid-cols-6 gap-2 rounded">
-            {selectedItem.map((item) => (
-              <Button
-                key={item}
-                size={'sm'}
-                variant={'outline'}
-                onClick={() =>
-                  setSelectedItem(selectedItem.filter((i) => i !== item))
-                }
-              >
-                <Icons.clear className=" mr-auto h-4 w-4" />
-                {item}
-              </Button>
-            ))}
+
+        {selectedItem.length > 0 && (
+          <div className="flex max-h-64 flex-col overflow-y-auto rounded border bg-primary-foreground p-4">
+            <span className="pb-4 text-sm font-semibold text-muted-foreground">
+              Selected item/-s
+            </span>
+            <div
+              aria-label="selected-items-list"
+              className="grid grid-cols-2 gap-2 rounded sm:grid-cols-6"
+            >
+              {selectedItem.map((item) => (
+                <span
+                  className={
+                    'relative flex h-9 items-center justify-center rounded-md border bg-background text-sm font-medium'
+                  }
+                  key={item}
+                >
+                  <Icons.clear
+                    aria-label="remove-item"
+                    className="absolute -right-1 -top-1 h-4 w-4 cursor-pointer rounded bg-secondary-foreground text-secondary"
+                    onClick={() =>
+                      setSelectedItem(selectedItem.filter((i) => i !== item))
+                    }
+                  />
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-      <div className="max-h-64 overflow-y-auto border p-4">
-        <div className="grid sm:grid-cols-4 md:grid-cols-6 gap-2">
+        )}
+        <div
+          className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto rounded border p-4 sm:grid-cols-6"
+          aria-label="item-list"
+        >
           {filteredItem.map((item) => (
             <Button
+              aria-pressed={selectedItem.includes(item.code)}
               key={item.code}
+              className={
+                selectedItem.includes(item.code) ? 'bg-primary-foreground' : ''
+              }
               variant={'outline'}
               size={'sm'}
-              disabled={selectedItem.includes(item.code)}
               onClick={() => onClick(item.code)}
             >
               <span className="mr-auto">
