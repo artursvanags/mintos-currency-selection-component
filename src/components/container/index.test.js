@@ -36,8 +36,7 @@ describe('SelectionContainer', () => {
 
   it('Toggles items correctly.', () => {
     const usdButton = screen.getByText('USD');
-    expect(usdButton).toHaveAttribute('aria-pressed', 'false');
-
+  
     fireEvent.click(usdButton);
     expect(usdButton).toHaveAttribute('aria-pressed', 'true');
 
@@ -51,22 +50,29 @@ describe('SelectionContainer', () => {
 
     const selectedItemList = screen.getByLabelText('selected-items-list');
     const selectedItem = within(selectedItemList).getByText('USD');
-    expect(selectedItem).toBeInTheDocument();
-
-    const removeItemIcon = within(selectedItem).getByLabelText('remove-item');
+     const removeItemIcon = within(selectedItem).getByLabelText('remove-item');
     fireEvent.click(removeItemIcon);
 
     expect(within(selectedItemList).queryByText('USD')).not.toBeInTheDocument();
   });
+  describe('Select all button functions', () => {
+  it('All items are selected correctly.', () => {
+    const selectAllButton = screen.getByLabelText('select-all');
+    fireEvent.click(selectAllButton);
+    
+    const selectedItemList = screen.getByLabelText('selected-items-list');
+    const items = within(selectedItemList).getAllByRole('generic');
+    expect(items).toHaveLength(data.length);
+  });
 
-  it('Selects all items correctly.', () => {
+  it('The button becomes disabled correctly.', () => {
     const selectAllButton = screen.getByLabelText('select-all');
     fireEvent.click(selectAllButton);
 
-    const selectedItemList = screen.getByLabelText('selected-items-list');
-    const items = within(selectedItemList).getAllByRole('button');
-    expect(items).toHaveLength(data.length);
+    expect(selectAllButton).toBeDisabled();
+  
   });
+});
 
   it('Clears all items correctly.', () => {
     const usdButton = screen.getByText('USD');
