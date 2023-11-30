@@ -26,7 +26,7 @@ export default function ModeToggle({...props}: React.HTMLAttributes<HTMLButtonEl
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align='start'>
         <DropdownMenuItem onClick={() => setTheme('light')}>
           <ThemeIcons.Sun className="mr-2 h-4 w-4" /> Light
         </DropdownMenuItem>
