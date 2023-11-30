@@ -9,29 +9,44 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/config/icons';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ActionButtonProps {
   items: string[];
-  selectAll: () => void;
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({ items, selectAll }) => {
+const ActionButton: React.FC<ActionButtonProps> = ({ items }) => {
+  const { toast } = useToast();
+
+  const copyToClipboard = () => {
+    const text = items.join(', ');
+    navigator.clipboard.writeText(text);
+    toast({
+      title: 'Success!',
+      description: `You have copied ${items.length} items to clipboard.`,
+    });
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button>
-          Actions <Icons.dropdown className="ml-2 h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {items.length > 1 && (
-          <DropdownMenuItem onClick={selectAll}>Select all</DropdownMenuItem>
-        )}
-        <DropdownMenuItem>Copy to Clipboard</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      {items.length > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button>
+              Actions <Icons.dropdown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem onClick={() => copyToClipboard()}>
+              Copy to Clipboard
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </>
   );
 };
 
