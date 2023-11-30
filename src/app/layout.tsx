@@ -4,6 +4,8 @@ import { Inter as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { TailwindIndicator } from '@/lib/tailwind-indicator';
 import { ThemeProvider } from '@/components/global/themeProvider';
+import { Toaster } from '@/components/ui/toaster';
+
 const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -24,8 +26,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <main className="relative">{children}</main>
-          <TailwindIndicator />
         </ThemeProvider>
+        <Toaster />
         <TailwindIndicator />
       </body>
     </html>
