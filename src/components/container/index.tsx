@@ -18,12 +18,12 @@ const SelectionContainer: React.FC<SelectionContainerProps> = ({
   data,
   ...props
 }) => {
-  const items = data;
-  if (!items) return null;
-
   const [selectedItem, setSelectedItem] = useState<string[]>([]);
   const [searchInput, setSearchInput] = useState<string>('');
 
+  const items = data;
+  if (!items) return null;
+  
   const filteredItem = items.filter((item) =>
     item.code.toLowerCase().includes(searchInput.toLowerCase()),
   );
