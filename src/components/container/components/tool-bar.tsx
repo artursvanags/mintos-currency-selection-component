@@ -6,30 +6,40 @@ import { Button } from '@/components/ui/button';
 import ActionButton from './action-button';
 import ThemeToggleButton from '@/components/global/themeToggleButton';
 
-interface ActionBarProps {
+interface ToolBarProps {
   onClear: () => void;
   onSelectAll: () => void;
   items: string[];
+  selectedItems: string[];
 }
-const ActionBar: React.FC<ActionBarProps> = ({
-  onClear,
+const ToolBar: React.FC<ToolBarProps> = ({
   items,
+  selectedItems,
   onSelectAll,
+  onClear,
 }) => {
   return (
     <div className="flex">
       <ThemeToggleButton />
       <div className="ml-auto flex gap-2">
-        {items.length > 0 && (
-          <Button variant={'outline'} onClick={onClear}>
+        {selectedItems.length > 0 && (
+          <Button aria-label="clear-all" variant={'outline'} onClick={onClear}>
             <Icons.clear className="mr-2 h-4 w-4" />
             Clear
           </Button>
         )}
-        <ActionButton items={items} selectAll={onSelectAll} />
+        <Button
+          aria-label="select-all"
+          variant={'outline'}
+          disabled={items.length === selectedItems.length}
+          onClick={onSelectAll}
+        >
+          Select All
+        </Button>
+        <ActionButton items={selectedItems} />
       </div>
     </div>
   );
 };
 
-export default ActionBar;
+export default ToolBar;
