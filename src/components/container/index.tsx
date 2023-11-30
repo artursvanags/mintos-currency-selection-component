@@ -23,7 +23,7 @@ const SelectionContainer: React.FC<SelectionContainerProps> = ({
 
   const items = data;
   if (!items) return null;
-  
+
   const filteredItem = items.filter((item) =>
     item.code.toLowerCase().includes(searchInput.toLowerCase()),
   );
@@ -94,32 +94,40 @@ const SelectionContainer: React.FC<SelectionContainerProps> = ({
             </div>
           </div>
         )}
-        <div
-          className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto rounded border p-4 sm:grid-cols-6"
-          aria-label="item-list"
-        >
-          {filteredItem.map((item) => (
-            <Button
-              aria-pressed={selectedItem.includes(item.code)}
-              key={item.code}
-              className={
-                selectedItem.includes(item.code) ? 'bg-primary-foreground' : ''
-              }
-              variant={'outline'}
-              size={'sm'}
-              onClick={() => onClick(item.code)}
-            >
-              <span className="mr-auto">
-                {selectedItem.includes(item.code) ? (
-                  <Icons.clear className="mr-2 h-4 w-4" />
-                ) : (
-                  <Icons.select className="mr-2 h-4 w-4" />
-                )}
-              </span>
-
-              {item.code}
-            </Button>
-          ))}
+        <div className="max-h-64 overflow-y-auto rounded border p-4">
+          {filteredItem.length === 0 && (
+            <span className="text-sm font-semibold text-muted-foreground">
+              No items found.
+            </span>
+          )}
+          <div
+            aria-label="item-list"
+            className="grid grid-cols-2 gap-2 sm:grid-cols-6"
+          >
+            {filteredItem.map((item) => (
+              <Button
+                aria-pressed={selectedItem.includes(item.code)}
+                key={item.code}
+                className={
+                  selectedItem.includes(item.code)
+                    ? 'bg-primary-foreground'
+                    : ''
+                }
+                variant={'outline'}
+                size={'sm'}
+                onClick={() => onClick(item.code)}
+              >
+                <span className="mr-auto">
+                  {selectedItem.includes(item.code) ? (
+                    <Icons.clear className="mr-2 h-4 w-4" />
+                  ) : (
+                    <Icons.select className="mr-2 h-4 w-4" />
+                  )}
+                </span>
+                {item.code}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
